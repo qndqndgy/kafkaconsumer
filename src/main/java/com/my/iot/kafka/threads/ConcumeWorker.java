@@ -1,21 +1,10 @@
 package com.my.iot.kafka.threads;
 
 import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Properties;
 
-import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.clients.consumer.ConsumerRecords;
 import org.apache.kafka.clients.consumer.KafkaConsumer;
-import org.influxdb.BatchOptions;
-import org.influxdb.InfluxDB;
-import org.influxdb.dto.Query;
-import org.influxdb.dto.QueryResult;
-
-import com.my.iot.influxDB.connection.InfluxDBConnection;
-import com.my.iot.influxDB.connection.InfluxDBConnectionFactory;
-import com.my.iot.influxDB.exception.InfluxDBConnectionFullException;
 
 public class ConcumeWorker implements Runnable {
 	int total;
@@ -37,7 +26,7 @@ public class ConcumeWorker implements Runnable {
 		consumer.subscribe(Arrays.asList(topic));
 		
 		while (true) {
-			ConsumerRecords<String, String> records = consumer.poll(100);
+			ConsumerRecords<String, String> records = consumer.poll(10);
 			
 			if(records.isEmpty())
 				try {
@@ -47,38 +36,13 @@ public class ConcumeWorker implements Runnable {
 				} catch (InterruptedException e1) {
 					System.out.println(e1.getMessage());
 				}
-			
-			InfluxDBConnection con = null;
-			try {
-				con = InfluxDBConnectionFactory.getConnection();
-			} catch (InfluxDBConnectionFullException e) {
-				System.out.println(e.getMessage());
-			}
-			InfluxDB db = con.getDb();
-			
-			db.setDatabase("test");
-			if(!db.isBatchEnabled()) db.enableBatch(BatchOptions.DEFAULTS);
-			StringBuilder writeValues = new StringBuilder();
-			writeValues.append("test,atag=test1 ");
-			boolean firstVal = true;
 			int cnt = records.count();
-			for (ConsumerRecord<String, String> record : records) {
-				if(firstVal) {
-					writeValues.append("val=").append(record.value());
-					firstVal = false;
-				}else {
-					writeValues.append(",val=").append(record.value());
-				}
-			}
+			new MyInfluxDBWriter(records).run();
 			total+=cnt;
 			System.out.println(String.format("%d data added to influxDB (total = %d)", cnt,total));
-			db.write(writeValues.toString());
-			db.flush();
 			System.out.println("100 Message Finished. need to commit.");
 			System.out.println(" Continue to work.");
 			consumer.commitAsync();
-			
-			InfluxDBConnectionFactory.endConnection(con);
 		}
 	}
 

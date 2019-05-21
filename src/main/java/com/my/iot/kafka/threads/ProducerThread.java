@@ -19,11 +19,11 @@ public class ProducerThread implements Runnable{
 		System.out.println(String.format("Producer(%d)  starts working. ", no));
 				
 		int repeat = 1;
-		while(repeat++ < 1001) {
+		while(repeat++ < 101) {
 			try {
 				KafkaMsgProducer.sendToKafkaQueue("test", String.valueOf(repeat).getBytes());
 			} catch (Exception e) {
-				System.out.println(e.getMessage());
+				e.printStackTrace();
 			} 
 		}
 		
