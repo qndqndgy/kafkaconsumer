@@ -23,20 +23,21 @@ public class MyInfluxDBWriter implements Runnable{
 		InfluxDBConnection con = null;
 		try {
 			con = InfluxDBConnectionFactory.getConnection();
+		
+			InfluxDB db = con.getDb();
+			
+			db.setDatabase("test");
+			if(!db.isBatchEnabled()) db.enableBatch(BatchOptions.DEFAULTS);
+			
+			for (ConsumerRecord<String, String> record : records) {
+				db.write(new StringBuilder("test,atag=test1 ").append("val=").append(record.value()).toString());
+			}
+			db.flush();
 		} catch (InfluxDBConnectionFullException e) {
 			System.out.println(e.getMessage());
-		}
-		InfluxDB db = con.getDb();
-		
-		db.setDatabase("test");
-		if(!db.isBatchEnabled()) db.enableBatch(BatchOptions.DEFAULTS);
-		
-		for (ConsumerRecord<String, String> record : records) {
-			db.write(new StringBuilder("test,atag=test1 ").append("val=").append(record.value()).toString());
-		}
-		db.flush();
-		
-		InfluxDBConnectionFactory.endConnection(con);
+		} finally {
+			InfluxDBConnectionFactory.endConnection(con);
+		}		
 	}
 
 }

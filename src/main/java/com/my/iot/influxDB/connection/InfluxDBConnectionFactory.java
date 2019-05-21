@@ -1,19 +1,19 @@
-package com.my.iot.influxDB.connection;
+package com.my.iot.common.influxdb.connection;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import com.my.iot.influxDB.exception.InfluxDBConnectionFullException;
+import com.my.iot.common.exception.InfluxDBConnectionFullException;
 
-/**InfluxDBConnectionFactory.java
- * InfluxDB와의 커넥션 Pool을 관리하는 클래스
- * (api server에서 그대로 가져왔다.)
- * 
+/**
+ * InfluxDBConnectionFactory.java
  * @author 효민영♥
  *
  */
 public class InfluxDBConnectionFactory {
 	private static final int connectionMaxNum = 10;
+	
+//	@Autowired InfluxDBConfig config;
 	
 	private static final String connectUri = "http://127.0.0.1:3000";
 	private static final String username = "telegraf";

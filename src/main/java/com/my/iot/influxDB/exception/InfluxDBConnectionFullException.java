@@ -1,11 +1,9 @@
-package com.my.iot.influxDB.exception;
+package com.my.iot.common.exception;
 
 import org.json.simple.JSONObject;
 
-/**
- * InfluxDBConnectionFullException.java
+/**InfluxDBConnectionFullException.java
  * 
- * InfluxDB Connection Pool이 가득 차면 raise되는 exception 클래스
  * @author 효민영♥
  *
  */
