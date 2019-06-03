@@ -1,15 +1,4 @@
-# MY Kafka Producer & Consumer (#Part 2)
-
-----
-
-본 프로젝트는 MY Api Server (#Part 1) 와 연결되는 개념으로, 이전 Springboot 기반 Restapi 서버에서 Basic한 서버의 구성과 웹호스팅,
-InfluxDB + Telegraf로 저장되는 Time-Series 데이터 연동 시각화 Vue대시보드를 제공했다면, 본 프로젝트는 iot업계에서 쏟아져 나오는 방대한 양의 Data를 
-어떻게 저장할 것이냐는 생각에서 출발했습니다. 막연히 일반 시스템처럼 CRUD를 처리한다면 많게는 수백, 수천개의 Sensor들에서 중앙으로 모이는 방대한 양의 Data를 단건별로 Database에 Insert했다간 HW자원을 아무리 늘려도 서버를 호스팅할 수 없을 것입니다. 
-
-때문에 대용량의 Data를 처리할 수 있는 방안을 고민했고, 이쪽으로 많은 인기를 얻고 있는 Kafka를 활용해서 대량의 Data를 Time Series Database인 InfluxDB에 Insert 하는 기능을 제공합니다.
-
-최초 목표는, Springboot Application에서 1차적으로 Data의 Insert요청을 받은 뒤, Kafka로 비동기 전달하여 Message Queue를 구성하며, Netty 기반 고성능 웹서버로 구성된 Consumer Server에서 
-효율적으로 대량의 요청을 처리하는 것이 목적이었으나, 절충하여 Netty App 안에서 Producer와 Consumer 역할을 동시에 하는 것으로 대체하였습니다.
+# MY Kafka Producer & Consumer Sample
 
 ----
 
